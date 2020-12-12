@@ -1,23 +1,31 @@
-import logo from './logo.svg';
-import './App.css';
+import Movies from "./components/Movies";
+import { API_URL } from "./service/api";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import "../src/styles/style.css";
 
 function App() {
+  const [movies, setMovies] = useState([]);
+  useEffect(() => {
+    axios
+      .get(API_URL)
+      .then((res) => res.data)
+      .then((data) => {
+        const movie = data.results;
+        setMovies(movie);
+      });
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+    <div>
+      <header>
+        <input type="search" placeholder="Search" className="search" />
       </header>
+      <div className="movie-container">
+        {movies.map((movie) => (
+          <Movies key={movie.id} {...movie} />
+        ))}
+      </div>
     </div>
   );
 }
